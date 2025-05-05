@@ -20,27 +20,27 @@ A basic e-commerce web app developed using Django. Users can browse products, se
 
 ## How to run 💡
   # 1. Clone the Repository
-    git clone
+    git clone https://github.com/khushi-0912/Ecommerce.git
   
-  # 1. Navigate to the project folder
+  # 2. Navigate to the project folder
     cd ecommerce_project
 
-  # 2. Create a virtual environment
+  # 3. Create a virtual environment
     python3 -m venv env
 
-  # 3. Activate the virtual environment
+  # 4. Activate the virtual environment
     # On Mac/Linux:
     source env/bin/activate
     # On Windows:
     env\Scripts\activate
 
-  # 4. Install dependencies
+  # 5. Install dependencies
     pip install django
 
-  # 5. Apply migrations
+  # 6. Apply migrations
     python manage.py migrate
 
-  # 6. Run the development server
+  # 7. Run the development server
     python manage.py runserver
     The site will be live in the following link
     http://127.0.0.1:8000/
