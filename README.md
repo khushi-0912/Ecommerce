@@ -19,6 +19,9 @@ A basic e-commerce web app developed using Django. Users can browse products, se
 - JSON (for product data)
 
 ## How to run 💡
+  # 1. Clone the Repository
+    git clone
+  
   # 1. Navigate to the project folder
     cd ecommerce_project
 
