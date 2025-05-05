@@ -1,0 +1,91 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #dde4ea;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #2c3e50 !important;
+  }
+  
+  .nav-link {
+    color: #2c3e50 !important;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: #007bff !important;
+  }
+  
+  .card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+  }
+  
+  .card-text {
+    font-size: 0.95rem;
+    color: #666;
+  }
+  
+  .quantity {
+    border-radius: 5px;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
+  }
+  
+  h2.text-center {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+  }
+  
+  #snackbar {
+    font-family: inherit;
+    border-radius: 6px;
+    background-color: #343a40;
+    color: white;
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-nav {
+      text-align: center;
+    }
+  
+    .nav-item {
+      margin-bottom: 10px;
+    }
+  }
+  

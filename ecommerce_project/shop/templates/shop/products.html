@@ -1,0 +1,185 @@
+{% extends 'shop/base.html' %} {% load static %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">All Products</h2>
+
+<div id="snackbar" style="
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 12px;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  bottom: 30px;
+  font-size: 16px;
+  opacity: 0;  /* Add opacity initially */
+  transition: opacity 0.5s ease, visibility 0s 0.5s; /* Transition visibility with delay */
+"></div>
+
+<div class="row mb-3">
+  <div class="col-md-4">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search by title...">
+  </div>
+  <div class="col-md-4">
+    <select id="filterCategory" class="form-select">
+      <option value="">All Categories</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Stationery">Stationery</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <select id="sortPrice" class="form-select">
+      <option value="">Sort by Price</option>
+      <option value="low">Low to High</option>
+      <option value="high">High to Low</option>
+    </select>
+  </div>
+</div>
+
+<div class="row" id="productContainer">
+  {% for product in products %}
+  <div class="col-md-3 mb-4 product-card" data-title="{{ product.title }}" data-category="{{ product.category }}" data-price="{{ product.price }}">
+    <div class="card h-100">
+      <img src="{% static product.image %}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+      <div class="card-body">
+        <h5 class="card-title">{{ product.title }}</h5>
+        <p class="card-text">${{ product.price }}</p>
+        <div class="d-flex align-items-center mb-2">
+          <input type="number" class="form-control form-control-sm me-2 quantity" min="1" value="1" style="width: 60px;">
+          <button class="btn btn-sm btn-success add-to-cart" data-id="{{ product.id }}">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    console.log("DOM fully loaded and parsed");
+    const searchInput = document.getElementById("searchInput");
+    const filterCategory = document.getElementById("filterCategory");
+    const sortPrice = document.getElementById("sortPrice");
+    const container = document.getElementById("productContainer");
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function updateCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+      saveCart();
+      console.log("Cart updated:", cart);
+    }
+
+    function saveCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+      fetch('/add_to_cart/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({ cart }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Cart saved:", data);
+        
+        showSnackbar("Product added to cart!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); 
+      });
+    }
+    
+    function getCSRFToken() {
+      const name = 'csrftoken';
+      const cookies = document.cookie.split('; ');
+      for (let cookie of cookies) {
+        if (cookie.startsWith(name + '=')) {
+          return decodeURIComponent(cookie.split('=')[1]);
+        }
+      }
+      return '';
+    }
+
+    function addToCart(productId, quantity) {
+      console.log(`Adding product with ID: ${productId} and quantity: ${quantity}`);
+      
+      const existingProduct = cart.find(item => item.id === productId);
+      
+      if (existingProduct) {
+        existingProduct.quantity += quantity;
+      } else {
+        cart.push({ id: productId, quantity: quantity });
+      }
+      
+      updateCart();
+      
+    }
+
+    function showSnackbar(message) {
+      const snackbar = document.getElementById("snackbar");
+      snackbar.innerText = message;
+    
+      snackbar.style.visibility = "visible";
+      snackbar.style.opacity = "1";
+      
+      setTimeout(() => {
+        snackbar.style.opacity = "0";
+        setTimeout(() => {
+          snackbar.style.visibility = "hidden";
+        }, 500);
+      }, 3000);  
+    }
+
+    function filterProducts() {
+      const query = searchInput.value.toLowerCase();
+      const category = filterCategory.value;
+      const sort = sortPrice.value;
+
+      let cards = Array.from(container.children);
+
+      cards.forEach(card => {
+        const title = card.getAttribute("data-title").toLowerCase();
+        const cat = card.getAttribute("data-category");
+        let show = title.includes(query) && (!category || category === cat);
+        card.style.display = show ? "block" : "none";
+      });
+
+      if (sort) {
+        cards.sort((a, b) => {
+          const priceA = parseFloat(a.getAttribute("data-price"));
+          const priceB = parseFloat(b.getAttribute("data-price"));
+          return sort === "low" ? priceA - priceB : priceB - priceA;
+        });
+        cards.forEach(card => container.appendChild(card));
+      }
+    }
+
+    searchInput.addEventListener("input", filterProducts);
+    filterCategory.addEventListener("change", filterProducts);
+    sortPrice.addEventListener("change", filterProducts);
+
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = button.getAttribute('data-id');
+        const quantity = parseInt(button.closest('.product-card').querySelector('.quantity').value);
+        
+        console.log(`Button clicked: productId: ${productId}, quantity: ${quantity}`);
+        addToCart(productId, quantity);
+      });
+    });
+  });
+
+</script>
+{% endblock %}

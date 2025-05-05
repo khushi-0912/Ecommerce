@@ -1,0 +1,75 @@
+{% extends 'shop/base.html' %}
+{% block title %}Thank You{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+  <h2 class="text-success mb-4">🎉 Thank you for your purchase!</h2>
+  <p>Your order has been placed successfully.</p>
+  <p>You will receive a confirmation email shortly.</p>
+
+  {% if cart %}
+    <div class="table-responsive mt-5">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart %}
+            <tr>
+              <td><img src="{{ item.image }}" alt="{{ item.title }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
+              <td>{{ item.title }}</td>
+              <td>${{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>${{ item.total }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="text-end mt-4">
+        <h4>Total: ${{ total }}</h4>
+      </div>
+    </div>
+  {% else %}
+    <p>No order details found.</p>
+  {% endif %}
+
+  <a href="{% url 'products' %}" class="btn btn-primary mt-4">Back to Products</a>
+</div>
+
+<script>
+  localStorage.removeItem('cart');
+  saveCart();
+
+  function saveCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+    fetch('/add_to_cart/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRFToken(),
+      },
+      body: JSON.stringify({ cart }),
+    })
+    .then(res => res.json())
+    .then(data => console.log("Cart saved:", data));
+  }
+  
+  function getCSRFToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split('; ');
+    for (let cookie of cookies) {
+      if (cookie.startsWith(name + '=')) {
+        return decodeURIComponent(cookie.split('=')[1]);
+      }
+    }
+    return '';
+  }
+</script>
+{% endblock %}

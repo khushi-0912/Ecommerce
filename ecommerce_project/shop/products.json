@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "title": "Wireless Mouse",
+        "category": "Electronics",
+        "price": 25.99,
+        "image": "images/wirelessmouse.png"
+    },
+    {
+        "id": 2,
+        "title": "Notebook",
+        "category": "Stationery",
+        "price": 4.99,
+        "image": "images/notebook.png"
+    },
+    {
+        "id": 3,
+        "title": "Bluetooth Speaker",
+        "category": "Electronics",
+        "price": 49.99,
+        "image": "images/bluetooth.png"
+    },
+    {
+        "id": 4,
+        "title": "Pen Set",
+        "category": "Stationery",
+        "price": 6.50,
+        "image": "images/pen.png"
+    },
+    {
+        "id": 5,
+        "title": "Folder",
+        "category": "Stationery",
+        "price": 9.0,
+        "image": "images/folder.png"
+    }
+]
